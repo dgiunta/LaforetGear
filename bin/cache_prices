@@ -1,0 +1,18 @@
+#!/usr/bin/env ruby
+require 'optparse'
+require File.join(File.expand_path(File.dirname(__FILE__)), '../laforet_gear')
+
+options = {}
+OptionParser.new do |opts|
+  opts.banner = "Usage: cache_prices [options]"
+
+  opts.on("-v", "--[no-]verbose", "Run verbosely") do |v|
+    options[:verbose] = v
+  end
+
+  opts.on("-d", "--debug", "Send debug output to the terminal") do |v|
+    options[:debug] = v
+  end
+end.parse!
+
+LaforetGear.cache_all_prices! options
