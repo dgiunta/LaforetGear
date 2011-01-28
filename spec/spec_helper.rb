@@ -1,16 +1,13 @@
 require 'rubygems'
 require 'bundler'
-
 Bundler.setup(:default, :test)
-
-require File.join(File.expand_path(File.dirname(__FILE__)), '../laforet_gear.rb')
 
 require 'open-uri'
 require 'ruby-debug'
 require 'rspec'
 
-LaforetGear.save_to = 'spec/tmp'
-LaforetGear.log_to = 'spec/tmp/log'
+ENV["LAFORET_ENV"] = 'test'
+require File.join(File.expand_path(File.dirname(__FILE__)), '../laforet_gear.rb')
 
 if ENV["REAL_REQUESTS"]
   print "Getting real content for non-stubbed requests... "

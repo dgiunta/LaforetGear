@@ -5,6 +5,22 @@ require 'nokogiri'
 require 'open-uri'
 require 'active_support'
 require 'active_support/core_ext'
+require 'yaml'
+
+ENVIRONMENT = ENV['LAFORET_ENV'].to_sym || :development
+
+config = {
+  :log_to => "log",
+  :save_to => "tmp"
+}
+
+if File.exists?('config.yml')
+  config_file = YAML.load_file('config.yml')[ENVIRONMENT]
+  puts ENVIRONMENT, config_file.inspect
+  config.merge!(config_file)
+end
+
+CONFIG = config
 
 module Url
   SELECTORS = {
@@ -35,7 +51,7 @@ end
 
 module Debugger
   def debug?
-    @debug ||= false
+    @debug ||= CONFIG[:debug]
   end
 
   def sprint msg=""
@@ -135,37 +151,19 @@ class LaforetGear
       doc = Nokogiri::HTML(open("http://blog.vincentlaforet.com/mygear/"))
       doc.css('#sub-nav a').map { |a| a['href'] }
     end
-
-    def save_to= dir
-      @@save_to = dir
-    end
-
-    def save_to
-      @@save_to ||= 'tmp'
-    end
-
-    def log_to= dir
-      @@log_to = dir
-    end
-
-    def log_to
-      @@log_to ||= 'log'
-    end
   end
 
   def initialize(path, options={})
     @path = path =~ /^http.*mygear\/(.*)\/$/ ? $1 : path
-    @filename = File.join(options[:save_to] || self.class.save_to, "#{@path}.json")
-    @debug = options[:debug]
+    @filename = File.join(CONFIG[:save_to], "#{@path}.json")
     @start_time = Time.now.strftime(TIMESTAMP)
     @logfile = if options[:logfile]
       options[:logfile]
     else
-      log_filename = "#{self.class.log_to}/#{@start_time}.log"
+      log_filename = "#{CONFIG[:log_to]}/#{@start_time}.log"
       FileUtils.mkdir_p File.dirname(log_filename)
       File.open log_filename, 'a+'
     end
-
   end
 
   def urls
