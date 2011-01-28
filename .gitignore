@@ -1,4 +1,5 @@
 .DS_Store
 Gemfile.lock
-bookmarklet.js
-bookmarklet.min.js
+bookmarklet/compiled/*
+log/*
+spec/tmp/*
