@@ -1,7 +1,8 @@
 #!/usr/bin/env ruby
 require 'optparse'
-require File.join(File.expand_path(File.dirname(__FILE__)), '../laforet_gear')
 require 'mail'
+
+require File.join(File.expand_path(File.dirname(__FILE__)), '../laforet_gear')
 
 options = {}
 OptionParser.new do |opts|
@@ -21,8 +22,8 @@ if $?.success?
   LaforetGear.cache_all_prices! options
 else
   Mail.deliver do
-    to      'dgiunta@mac.com'
-    from    'dgiunta@mac.com'
+    to      CONFIG[:error_email][:to]
+    from    CONFIG[:error_email][:from]
     subject '[ LAFORET GEAR ] Tests Failed'
     body    <<EOM
 Tests failed for the LaforetGear pricing project. Output is listed below. Perhaps a price has changed, or a website was redesigned?

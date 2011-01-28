@@ -1,0 +1,15 @@
+:development:
+  :save_to: tmp
+  :log_to: log
+  :debug: true
+  :error_email:
+    :to: your_email@here.com
+    :from: your_email@here.com
+
+:test:
+  :save_to: spec/tmp
+  :log_to: spec/tmp/log
+  :debug: false
+  :error_email:
+    :to: test@test.com
+    :from: test@test.com
