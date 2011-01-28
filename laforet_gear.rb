@@ -143,6 +143,14 @@ class LaforetGear
     def save_to
       @@save_to ||= 'tmp'
     end
+
+    def log_to= dir
+      @@log_to = dir
+    end
+
+    def log_to
+      @@log_to ||= 'log'
+    end
   end
 
   def initialize(path, options={})
@@ -150,7 +158,14 @@ class LaforetGear
     @filename = File.join(options[:save_to] || self.class.save_to, "#{@path}.json")
     @debug = options[:debug]
     @start_time = Time.now.strftime(TIMESTAMP)
-    @logfile = options[:logfile] || File.open("log/#{@start_time}.log", 'a+')
+    @logfile = if options[:logfile]
+      options[:logfile]
+    else
+      log_filename = "#{self.class.log_to}/#{@start_time}.log"
+      FileUtils.mkdir_p File.dirname(log_filename)
+      File.open log_filename, 'a+'
+    end
+
   end
 
   def urls

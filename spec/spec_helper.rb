@@ -10,6 +10,7 @@ require 'ruby-debug'
 require 'rspec'
 
 LaforetGear.save_to = 'spec/tmp'
+LaforetGear.log_to = 'spec/tmp/log'
 
 if ENV["REAL_REQUESTS"]
   print "Getting real content for non-stubbed requests... "
